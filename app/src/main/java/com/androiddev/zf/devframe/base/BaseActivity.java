@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
@@ -42,7 +43,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         DialogInterface.OnCancelListener {
 
     protected BaseLayout mBaseLayout;
-
     protected ToolbarLayout mToolbarLayout;
 
     protected Dialog mProgressDialog;
@@ -76,9 +76,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
 
 
     public void setBackground(int resId) {
-        mToolbarLayout.setBackground(resId);
+        if (mToolbarLayout != null) {
+            mToolbarLayout.setBackground(resId);
+        }
     }
 
+    /**
+     * 暂时不知道适用场景。。。
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -93,6 +99,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
 
     }
 
+    /**
+     * 暂时不知道适用场景。。。
+     * @param 、
+     */
     private void initWindowView() {
         Window window = getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -105,6 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
 
     /**
      * Set action bar overflow showing always, avoid it's not showing on some phones.
+     * 暂时不知道适用场景。。。
      */
     private void setOverflowShowingAlways() {
         try {
@@ -117,6 +128,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         }
     }
 
+    /**
+     * 就很棒 。。 不过感觉这样视图层级很深 。。
+     * @param layoutResID
+     */
     @Override
     public void setContentView(int layoutResID) {
         addSwipeLayout(LayoutInflater.from(this).inflate(layoutResID, null));
@@ -127,6 +142,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         addSwipeLayout(view);
     }
 
+    /**
+     * 套上带有标题栏的布局  .. 自定义标题栏
+     * @param view
+     * @return
+     */
     private View buildToolbarLayout(View view) {
         if (isToolbarEnable()) {
             mToolbarLayout = new ToolbarLayout.Builder(this)
@@ -156,6 +176,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         return view;
     }
 
+    /**
+     * 理解滑动退出后 加上swipback
+     * @param view
+     */
     private void addSwipeLayout(View view) {
         //1.将view转换为四层结构的baseLayout
         view = buildContentView(view);
@@ -165,11 +189,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         super.setContentView(view);
     }
 
-    protected void onSwipeScrollStateChange(int state, float scrollPercent) {
-    }
-
-    protected void onSwipeEdgeTouch(int edgeFlag) {
-    }
 
     /**
      * 标题栏左侧图标/文字 点击时候的回调
@@ -215,6 +234,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
 //        return super.onKeyDown(keyCode, event);
 //    }
 
+    /**
+     * 弹出菜单栏。  PopupMenu
+     */
     private void showPopMenu() {
         if (mPopupMenu != null) {
             if (mIsPopupMenuShow) {
@@ -226,6 +248,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
         }
     }
 
+    /**
+     * 构建内容视图布局
+     * @param view
+     * @return
+     */
     private View buildContentView(View view) {
         if (hasBaseLayout()) {
             BaseLayout.Builder builder = getLayoutBuilder();
@@ -696,7 +723,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLayo
      * 获取状态栏的颜色
      */
     public int getStatusBarColor() {
-        return getResources().getColor(R.color.colorPrimaryDark);
+        return ContextCompat.getColor(this, R.color.themes_main);
     }
 
 }

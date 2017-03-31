@@ -33,7 +33,16 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
         super(context);
     }
 
-
+    /**
+     *
+     * @param context
+     * @param empty    若为空则使用默认的
+     * @param error     同上
+     * @param content   不能为空
+     * @param progressbar   同上上
+     * @param progressbarBg 进度条显示的颜色
+     * @param onBaseLayoutClickListener    页面的点击事件
+     */
     public BaseLayout(Context context, View empty, View error, @NonNull View content,
                       View progressbar, int progressbarBg, OnBaseLayoutClickListener onBaseLayoutClickListener) {
         this(context);
@@ -82,6 +91,8 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
         mProgressBar.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
         mErrorView.setOnClickListener(this);
+        //一开始默认显示的内容页面
+        showContentView();
     }
 
     public void setEmptyView(Context context, int resId) {
@@ -102,6 +113,7 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        //防止多次点击
         ViewUtils.setDelayedClickable(v, 500);
         if (mOnBaseLayoutClickListener != null) {
             Object object = v.getTag();
@@ -117,6 +129,13 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * 依次表示
+     * 显示内容页面
+     * 显示进度条
+     * 显示空界面
+     * 显示错误界面
+     */
     public void showContentView() {
         mContentView.setVisibility(View.VISIBLE);
         mEmptyView.setVisibility(View.GONE);
@@ -145,6 +164,9 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
         mProgressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * 利用建造者模式来构建一个BaseLayout
+     */
     public static class Builder {
         private Context context;
         private LayoutInflater inflater;
@@ -216,6 +238,11 @@ public class BaseLayout extends RelativeLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * 依次表示网络错误点击事件
+     *
+     * 空页面点击事件
+     */
     public static interface OnBaseLayoutClickListener {
         void onClickRetry();
 
