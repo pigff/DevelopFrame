@@ -2,14 +2,14 @@ package com.androiddev.zf.devframe.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.androiddev.zf.devframe.R;
-import com.androiddev.zf.devframe.subscribers.SimpleSubListener;
+import com.androiddev.zf.devframe.base.presenter.imp.ListPresenter;
+import com.androiddev.zf.devframe.base.view.IListView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -19,15 +19,14 @@ import java.util.List;
  * Created by greedy on 17/3/14.
  */
 
-public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, BaseViewHolder>> extends BaseMFragment implements BaseQuickAdapter.RequestLoadMoreListener {
+public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? extends BaseViewHolder>, P extends ListPresenter<T>>
+        extends MvpFragment<P> implements BaseQuickAdapter.RequestLoadMoreListener, IListView<T> {
 
     protected RecyclerView mRecyclerView;
     protected V mAdapter;
     protected int mPageNum;
     protected int mPageSize;
     private boolean mIsLoad;
-
-    private SimpleSubListener<List<T>> mSimpleSubListener;
 
     @Override
     protected View getFragmentView(LayoutInflater inflater, ViewGroup container) {
@@ -53,7 +52,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, Base
                     "The subclass of ToolbarActivity must contain a recyclerview.");
         }
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(getLayoutManager());
 //        mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
@@ -74,6 +73,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, Base
         mPageNum = 0;
         mPageSize = 10;
         mIsLoad = false;
+
     }
 
 
@@ -82,47 +82,37 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, Base
         return true;
     }
 
-    protected SimpleSubListener<List<T>> getSimpleListener() {
-        if (mSimpleSubListener == null) {
-            mSimpleSubListener = new SimpleSubListener<List<T>>() {
-                @Override
-                public void onNext(List<T> t) {
-                    if (mPageNum == 0 && t.size() == 0) {
-                        showEmpty();
-                        return;
-                    }
-                    mAdapter.addData(t);
-                    if (canLoadMore()) {
-                        if (t.size() <= mPageSize) {
-                            if (mPageNum == 0) {
-                                mAdapter.loadMoreEnd(true);
-                            } else {
-                                mAdapter.loadMoreEnd();
-                            }
-                        } else {
-                            mAdapter.loadMoreComplete();
-                            mPageNum++;
-                        }
-                    }
-                    mIsLoad = false;
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    if (mPageNum == 0 && hasBaseLayout()) {
-                        showError();
-                    } else {
-                        mAdapter.loadMoreFail();
-                    }
-                    mIsLoad = false;
-                }
-            };
-        }
-        return mSimpleSubListener;
+    @Override
+    public void addData(List<T> t) {
+        mAdapter.addData(t);
     }
 
+    @Override
+    public void setNewData(List<T> t) {
+        mAdapter.setNewData(t);
+    }
 
-    protected boolean canLoadMore() {
+    @Override
+    public void loadComplete() {
+        mAdapter.loadMoreComplete();
+    }
+
+    @Override
+    public void loadError() {
+        mAdapter.loadMoreFail();
+    }
+
+    @Override
+    public void loadEnd(boolean show) {
+        if (show) {
+            mAdapter.loadMoreEnd(false);
+        } else {
+            mAdapter.loadMoreEnd(true);
+        }
+    }
+
+    @Override
+    public boolean canLoadMore() {
         return false;
     }
 
@@ -131,6 +121,8 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, Base
     }
 
     protected abstract V getRecyclerAdapter();
+
+    protected abstract RecyclerView.LayoutManager getLayoutManager();
 
     protected void getData() {
 

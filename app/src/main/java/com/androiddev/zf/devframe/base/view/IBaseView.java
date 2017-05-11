@@ -1,4 +1,4 @@
-package com.androiddev.zf.devframe.base;
+package com.androiddev.zf.devframe.base.view;
 
 /**
  * Created by greedy on 2017/5/11.

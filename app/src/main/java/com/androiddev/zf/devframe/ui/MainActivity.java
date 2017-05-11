@@ -1,7 +1,9 @@
-package com.androiddev.zf.devframe;
+package com.androiddev.zf.devframe.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.androiddev.zf.devframe.R;
 
 public class MainActivity extends AppCompatActivity {
 

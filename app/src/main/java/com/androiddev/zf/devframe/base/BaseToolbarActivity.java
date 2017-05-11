@@ -18,7 +18,7 @@ import com.androiddev.zf.devframe.R;
  * Created by greedy on 17/3/11.
  */
 
-public abstract class BaseToolbarActivity extends BaseMActivity {
+public abstract class BaseToolbarActivity extends MvpActivity {
 
     protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;

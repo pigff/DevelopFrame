@@ -1,38 +1,31 @@
 package com.androiddev.zf.devframe.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.androiddev.zf.devframe.R;
+import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
+import com.androiddev.zf.devframe.base.view.IBaseView;
 import com.androiddev.zf.devframe.utils.LogUtil;
-import com.androiddev.zf.devframe.widget.Constants;
 import com.androiddev.zf.devframe.widget.EmptyLayout;
 
 import org.greenrobot.eventbus.EventBus;
-
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 
 /**
  * Created by lin on 2017/2/23.
  */
 
-public abstract class BaseMFragment extends Fragment implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
+public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
 
-    private static final String TAG = "BaseMFragment";
-
-    private CompositeSubscription mCompositeSubscription;
-
+    private static final String TAG = "MvpFragment";
     protected View mView;
     private EmptyLayout mEmptyLayout;
     private boolean mIsInitialized;
+    private P mPresenter;
 
     @Nullable
     @Override
@@ -85,9 +78,6 @@ public abstract class BaseMFragment extends Fragment implements IBaseView, Empty
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCompositeSubscription != null) {
-            mCompositeSubscription.unsubscribe();
-        }
     }
 
     @Override
@@ -176,39 +166,6 @@ public abstract class BaseMFragment extends Fragment implements IBaseView, Empty
 
     }
 
-    protected CompositeSubscription getCompositeSubscription() {
-        if (mCompositeSubscription == null) {
-            mCompositeSubscription = new CompositeSubscription();
-        }
-        return mCompositeSubscription;
-    }
-
-    protected void addSubscription(Subscription subscription) {
-        if (mCompositeSubscription == null) {
-            mCompositeSubscription = new CompositeSubscription();
-        }
-        mCompositeSubscription.add(subscription);
-    }
-
-    protected void openActivity(Class<?> clazz) {
-        Intent intent = new Intent(getActivity(), clazz);
-        startActivity(intent);
-    }
-
-    protected void openActivity(Class<?> clazz, Bundle bundle) {
-        Intent intent = new Intent(getActivity(), clazz);
-        intent.putExtra(Constants.PARAM, bundle);
-        startActivity(intent);
-    }
-
-    protected void showShortToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void showLongToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-    }
-
     protected View findViewById(int id) {
         if (id < 0) {
             return null;
@@ -216,6 +173,15 @@ public abstract class BaseMFragment extends Fragment implements IBaseView, Empty
         return mView.findViewById(id);
     }
 
+    protected P getPresenter() {
+        if (mPresenter == null) {
+            mPresenter = initPresenter();
+        }
+        return mPresenter;
+    }
+
+
+    protected abstract P initPresenter();
 
     protected abstract View getFragmentView(LayoutInflater inflater, ViewGroup container);
 

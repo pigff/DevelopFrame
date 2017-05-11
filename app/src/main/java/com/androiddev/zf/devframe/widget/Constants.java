@@ -5,7 +5,8 @@ package com.androiddev.zf.devframe.widget;
  */
 public class Constants {
 
-    public static final String BASE_URL = "";
+    public static final String DEFAULT_URL = "http://route.showapi.com/";
+    public static final String BASE_URL = DEFAULT_URL;
     public static final String BASE_IMG_URL = "";
 
     // 权限
@@ -19,4 +20,5 @@ public class Constants {
     public static final int DEFAULT_PAGENUM = 0;
     public static final int DEFAULT_PAGESIZE = 100;
 
+    public static final int SUCCESS_CODE = 0;
 }

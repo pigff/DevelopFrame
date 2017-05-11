@@ -3,7 +3,7 @@ package com.androiddev.zf.devframe.subscribers;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.androiddev.zf.devframe.App;
+import com.fjrcloud.sciencepro.App;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -14,17 +14,19 @@ import rx.Subscriber;
  * Created by greedy on 2017/4/6.
  */
 
-public class SimpleSubscriber<T> extends Subscriber<T> {
+public class CompleteSubscriber<T> extends Subscriber<T> {
 
-    private SimpleSubListener<T> mSimpleSubListener;
+    private CompleteSubListener<T> completeSubListener;
 
-    public SimpleSubscriber(SimpleSubListener<T> simpleSubListener) {
-        mSimpleSubListener = simpleSubListener;
+    public CompleteSubscriber(CompleteSubListener<T> completeSubListener) {
+        this.completeSubListener = completeSubListener;
     }
 
     @Override
     public void onCompleted() {
-
+        if (completeSubListener != null) {
+            completeSubListener.onCompleted();
+        }
     }
 
     @Override
@@ -40,15 +42,15 @@ public class SimpleSubscriber<T> extends Subscriber<T> {
                 Toast.makeText(App.getInstance(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-        if (mSimpleSubListener != null) {
-            mSimpleSubListener.onError(e);
+        if (completeSubListener != null) {
+            completeSubListener.onError(e);
         }
     }
 
     @Override
     public void onNext(T t) {
-        if (mSimpleSubListener != null) {
-            mSimpleSubListener.onNext(t);
+        if (completeSubListener != null) {
+            completeSubListener.onNext(t);
         }
     }
 }

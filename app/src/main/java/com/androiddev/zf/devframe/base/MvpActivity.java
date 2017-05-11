@@ -4,22 +4,23 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.androiddev.zf.devframe.R;
+import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
+import com.androiddev.zf.devframe.base.view.IBaseView;
 import com.androiddev.zf.devframe.utils.LogUtil;
 import com.androiddev.zf.devframe.widget.EmptyLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
-
 /**
  * Created by lin on 2017/2/23.
  */
 
-public abstract class BaseMActivity extends BaseActivity implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
+public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
 
-    private static final String TAG = "BaseMActivity";
-    private CompositeSubscription mCompositeSubscription;
+
+    private static final String TAG = "MvpActivity";
+
+    private P mPresenter;
 
     protected EmptyLayout mEmptyLayout;
 
@@ -32,25 +33,27 @@ public abstract class BaseMActivity extends BaseActivity implements IBaseView, E
             mEmptyLayout = (EmptyLayout) findViewById(R.id.emptylayout);
             mEmptyLayout.setOnBaseLayoutClickListener(this);
         }
-
+        if (registEventBus()) {
+            EventBus.getDefault().register(this);
+        }
         init();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (registEventBus()) {
-            EventBus.getDefault().register(this);
-        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-        if (mCompositeSubscription != null) {
-            mCompositeSubscription.unsubscribe();
-        }
         if (registEventBus()) {
             EventBus.getDefault().unregister(this);
         }
@@ -82,22 +85,6 @@ public abstract class BaseMActivity extends BaseActivity implements IBaseView, E
             mEmptyLayout.hide();
         }
     }
-
-
-    protected CompositeSubscription getCompositeSubscription() {
-        if (mCompositeSubscription == null) {
-            mCompositeSubscription = new CompositeSubscription();
-        }
-        return mCompositeSubscription;
-    }
-
-    protected void addSubscription(Subscription subscription) {
-        if (mCompositeSubscription == null) {
-            mCompositeSubscription = new CompositeSubscription();
-        }
-        mCompositeSubscription.add(subscription);
-    }
-
 
 
     /**
@@ -138,6 +125,15 @@ public abstract class BaseMActivity extends BaseActivity implements IBaseView, E
     @Override
     public void onClickEmpty() {
 
+    }
+
+    protected abstract P initPresenter();
+
+    protected P getPresenter() {
+        if (mPresenter == null) {
+            mPresenter = initPresenter();
+        }
+        return mPresenter;
     }
 
     protected boolean registEventBus() {

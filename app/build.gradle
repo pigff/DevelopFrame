@@ -40,4 +40,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.13'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 }
