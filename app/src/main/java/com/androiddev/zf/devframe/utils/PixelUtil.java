@@ -20,7 +20,7 @@ public class PixelUtil {
      * @return the int
      */
     public static float dp2px(float value) {
-        final float scale = App.getInstance().getResources().getDisplayMetrics().densityDpi;
+        float scale = App.getInstance().getResources().getDisplayMetrics().densityDpi;
         return value * scale / 160 + 0.5f;
     }
 

@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.androiddev.zf.devframe.R;
-import com.androiddev.zf.devframe.utils.PixelUtil;
 
 
 /**
@@ -50,8 +49,8 @@ public class MaterialDesignProgressBar extends View {
     private void initAttr(Context context, AttributeSet attrs, int defStyle) {
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.MaterialDesignProgressBar, defStyle, 0);
-
-        mStokeWidth = a.getDimensionPixelSize(R.styleable.MaterialDesignProgressBar_progress_stroke_width, (int) PixelUtil.dp2px(2));
+        a.recycle();
+        mStokeWidth = a.getDimensionPixelSize(R.styleable.MaterialDesignProgressBar_progress_stroke_width, 10);
         mStrokeColor = a.getColor(R.styleable.MaterialDesignProgressBar_progress_stroke_color, 0xff000000);
     }
 

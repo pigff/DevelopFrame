@@ -1,4 +1,4 @@
-package com.androiddev.zf.devframe.base;
+package com.androiddev.zf.devframe.useless;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,6 +8,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.androiddev.zf.devframe.widget.BaseLayout;
 
 /**
  * time: 15/6/9

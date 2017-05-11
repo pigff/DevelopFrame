@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fjrcloud.sciencepro.widget.EmptyLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emptylayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</com.fjrcloud.sciencepro.widget.EmptyLayout>

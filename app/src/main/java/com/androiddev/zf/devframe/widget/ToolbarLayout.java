@@ -1,4 +1,4 @@
-package com.androiddev.zf.devframe.base;
+package com.androiddev.zf.devframe.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
