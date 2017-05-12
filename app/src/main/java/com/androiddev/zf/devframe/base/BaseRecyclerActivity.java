@@ -7,11 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
 import com.androiddev.zf.devframe.R;
-import com.androiddev.zf.devframe.subscribers.SimpleSubListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-
-import java.util.List;
 
 /**
  * Created by greedy on 17/3/14.
@@ -24,7 +21,7 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
     protected int mPageNum;
     protected int mPageSize;
     protected boolean mIsLoad;
-    private SimpleSubListener<List<T>> mSimpleSubListener;
+//    private SimpleSubListener<List<T>> mSimpleSubListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +79,7 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
                     "The subclass of ToolbarActivity must contain a recyclerview.");
         }
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(getLayoutManager());
 //        mRecyclerView.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
@@ -92,44 +89,44 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
 
     }
 
-    protected SimpleSubListener<List<T>> getSimpleListener() {
-        if (mSimpleSubListener == null) {
-            mSimpleSubListener = new SimpleSubListener<List<T>>() {
-                @Override
-                public void onNext(List<T> t) {
-                    if (mPageNum == 0 && t.size() == 0) {
-                        showEmpty();
-                        return;
-                    }
-                    mAdapter.addData(t);
-                    if (canLoadMore()) {
-                        if (t.size() <= mPageSize) {
-                            if (mPageNum == 0) {
-                                mAdapter.loadMoreEnd(true);
-                            } else {
-                                mAdapter.loadMoreEnd();
-                            }
-                        } else {
-                            mAdapter.loadMoreComplete();
-                            mPageNum++;
-                        }
-                    }
-                    mIsLoad = false;
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    if (mPageNum == 0 && hasBaseLayout()) {
-                        showError();
-                    } else {
-                        mAdapter.loadMoreFail();
-                    }
-                    mIsLoad = false;
-                }
-            };
-        }
-        return mSimpleSubListener;
-    }
+//    protected SimpleSubListener<List<T>> getSimpleListener() {
+//        if (mSimpleSubListener == null) {
+//            mSimpleSubListener = new SimpleSubListener<List<T>>() {
+//                @Override
+//                public void onNext(List<T> t) {
+//                    if (mPageNum == 0 && t.size() == 0) {
+//                        showEmpty();
+//                        return;
+//                    }
+//                    mAdapter.addData(t);
+//                    if (canLoadMore()) {
+//                        if (t.size() <= mPageSize) {
+//                            if (mPageNum == 0) {
+//                                mAdapter.loadMoreEnd(true);
+//                            } else {
+//                                mAdapter.loadMoreEnd();
+//                            }
+//                        } else {
+//                            mAdapter.loadMoreComplete();
+//                            mPageNum++;
+//                        }
+//                    }
+//                    mIsLoad = false;
+//                }
+//
+//                @Override
+//                public void onError(Throwable throwable) {
+//                    if (mPageNum == 0 && hasBaseLayout()) {
+//                        showError();
+//                    } else {
+//                        mAdapter.loadMoreFail();
+//                    }
+//                    mIsLoad = false;
+//                }
+//            };
+//        }
+//        return mSimpleSubListener;
+//    }
 
     @Override
     protected boolean hasBaseLayout() {
@@ -148,6 +145,10 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
 
     protected boolean openLoadAnim() {
         return false;
+    }
+
+    private RecyclerView.LayoutManager getLayoutManager() {
+        return new LinearLayoutManager(this);
     }
 
     @Override

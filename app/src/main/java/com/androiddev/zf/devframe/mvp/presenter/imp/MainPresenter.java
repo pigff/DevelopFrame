@@ -13,19 +13,22 @@ import com.androiddev.zf.devframe.subscribers.SimpleSubscriber;
  */
 
 public class MainPresenter extends BasePresenter<IMainView> implements IMainPresenter {
+
     @Override
     public void getData() {
-        SimpleSubscriber<Joke> simpleSubscriber = new SimpleSubscriber<>(new SimpleSubListener<Joke>() {
-            @Override
-            public void onNext(Joke joke) {
-                getView().showData(joke);
-            }
+        RequestManager.getInstance()
+                .findJokeList()
+                .compose(getView().<Joke>bindToLife())
+                .subscribe(new SimpleSubscriber<>(new SimpleSubListener<Joke>() {
+                    @Override
+                    public void onNext(Joke joke) {
+                        getView().showData(joke);
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
+                    @Override
+                    public void onError(Throwable throwable) {
 
-            }
-        });
-        RequestManager.getInstance().findJokeList(simpleSubscriber);
+                    }
+                }));
     }
 }

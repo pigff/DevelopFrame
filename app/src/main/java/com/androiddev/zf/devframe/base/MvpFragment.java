@@ -11,6 +11,7 @@ import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
 import com.androiddev.zf.devframe.base.view.IBaseView;
 import com.androiddev.zf.devframe.utils.LogUtil;
 import com.androiddev.zf.devframe.widget.EmptyLayout;
+import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -102,6 +103,11 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
     @Override
     public void onClickEmpty() {
 
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return bindToLifecycle();
     }
 
     /**

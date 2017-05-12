@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface IListView<T> extends IBaseView {
 
-    void addData(List<T> t);
-
-    void setNewData(List<T> t);
+    void addData(List<T> data);
 
     void loadComplete();
 

@@ -2,6 +2,8 @@ package com.androiddev.zf.devframe.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,6 @@ import com.androiddev.zf.devframe.base.view.IListView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.util.List;
-
 /**
  * Created by greedy on 17/3/14.
  */
@@ -23,10 +23,11 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
         extends MvpFragment<P> implements BaseQuickAdapter.RequestLoadMoreListener, IListView<T> {
 
     protected RecyclerView mRecyclerView;
-    protected V mAdapter;
+    private V mAdapter;
     protected int mPageNum;
     protected int mPageSize;
-    private boolean mIsLoad;
+    protected boolean mIsLoad;
+    private boolean mIsRefresh;
 
     @Override
     protected View getFragmentView(LayoutInflater inflater, ViewGroup container) {
@@ -47,6 +48,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     @Override
     public void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_common_fragment);
+        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_common_fragment);
         if (mRecyclerView == null) {
             throw new IllegalStateException(
                     "The subclass of ToolbarActivity must contain a recyclerview.");
@@ -59,7 +61,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
 
     @Override
     public void initAdapter() {
-        mAdapter = getRecyclerAdapter();
+        mAdapter = initRecyclerAdapter();
         if (canLoadMore()) {
             mAdapter.setOnLoadMoreListener(this, mRecyclerView);
         }
@@ -73,7 +75,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
         mPageNum = 0;
         mPageSize = 10;
         mIsLoad = false;
-
+        mIsRefresh = false;
     }
 
 
@@ -82,34 +84,14 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
         return true;
     }
 
-    @Override
-    public void addData(List<T> t) {
-        mAdapter.addData(t);
-    }
-
-    @Override
-    public void setNewData(List<T> t) {
-        mAdapter.setNewData(t);
-    }
-
-    @Override
-    public void loadComplete() {
-        mAdapter.loadMoreComplete();
-    }
-
-    @Override
-    public void loadError() {
-        mAdapter.loadMoreFail();
-    }
-
-    @Override
-    public void loadEnd(boolean show) {
-        if (show) {
-            mAdapter.loadMoreEnd(false);
-        } else {
-            mAdapter.loadMoreEnd(true);
-        }
-    }
+//    @Override
+//    public void loadEnd(boolean show) {
+//        if (show) {
+//            mAdapter.loadMoreEnd(false);
+//        } else {
+//            mAdapter.loadMoreEnd(true);
+//        }
+//    }
 
     @Override
     public boolean canLoadMore() {
@@ -120,24 +102,24 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
         return false;
     }
 
-    protected abstract V getRecyclerAdapter();
+    protected abstract V initRecyclerAdapter();
 
-    protected abstract RecyclerView.LayoutManager getLayoutManager();
-
-    protected void getData() {
-        getPresenter().getData();
-    }
-
-
-    @Override
-    public void onLoadMoreRequested() {
-        getNetData();
-    }
-
-    private void getNetData() {
-        if (!mIsLoad) {
-            mIsLoad = true;
-            getData();
+    protected V getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = initRecyclerAdapter();
         }
+        return mAdapter;
     }
+
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new LinearLayoutManager(getActivity());
+    }
+
+
+//    private void getNetData() {
+//        if (!mIsLoad) {
+//            mIsLoad = true;
+//            getData();
+//        }
+//    }
 }

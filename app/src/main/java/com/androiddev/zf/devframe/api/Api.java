@@ -12,4 +12,8 @@ public interface Api {
 
     @GET("341-3")
     Observable<Joke> findJokeList(@Query("showapi_appid") String appid, @Query("showapi_sign") String sign);
+
+    @GET("341-3")
+    Observable<Joke> findJokeList(@Query("showapi_appid") String appid, @Query("showapi_sign") String sign
+                                , @Query("page") int pageNum, @Query("maxResult") int pageSize);
 }

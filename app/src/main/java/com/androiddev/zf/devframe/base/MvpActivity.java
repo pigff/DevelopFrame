@@ -8,6 +8,7 @@ import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
 import com.androiddev.zf.devframe.base.view.IBaseView;
 import com.androiddev.zf.devframe.utils.LogUtil;
 import com.androiddev.zf.devframe.widget.EmptyLayout;
+import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,6 +41,13 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
         if (getPresenter() != null) {
             getPresenter().attachView(this);
         }
+    }
+
+    private void init() {
+        initData();
+        initAdapter();
+        initView();
+        initListener();
     }
 
     @Override
@@ -109,13 +117,11 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
 
     protected abstract void initView();
 
-    private void init() {
-        initData();
-        initAdapter();
-        initView();
-        initListener();
-    }
 
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return bindToLifecycle();
+    }
 
     @Override
     public void onClickRetry() {

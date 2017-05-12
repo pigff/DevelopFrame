@@ -5,7 +5,6 @@ import android.util.Log;
 import com.androiddev.zf.devframe.App;
 import com.androiddev.zf.devframe.api.Api;
 import com.androiddev.zf.devframe.api.Joke;
-import com.androiddev.zf.devframe.subscribers.SimpleSubscriber;
 import com.androiddev.zf.devframe.widget.Constants;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -23,6 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -103,15 +103,14 @@ public class RequestManager {
         return mApi;
     }
 
-    public void findJokeList(SimpleSubscriber<Joke> sub) {
-        mApi.findJokeList(APP_ID, SIGN)
+    public Observable<Joke> findJokeList() {
+        return mApi.findJokeList(APP_ID, SIGN)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(sub);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void findJokeList2(SimpleSubscriber<List<Joke.ShowapiResBodyBean.ContentlistBean>> sub) {
-        mApi.findJokeList(APP_ID, SIGN)
+    public Observable<List<Joke.ShowapiResBodyBean.ContentlistBean>> findJokeList2(int pageNum, int pageSize) {
+        return mApi.findJokeList(APP_ID, SIGN, pageNum, pageSize)
                 .map(new Func1<Joke, List<Joke.ShowapiResBodyBean.ContentlistBean>>() {
                     @Override
                     public  List<Joke.ShowapiResBodyBean.ContentlistBean> call(Joke joke) {
@@ -119,7 +118,6 @@ public class RequestManager {
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(sub);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

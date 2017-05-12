@@ -14,21 +14,18 @@ public abstract class ListPresenter<T> extends BasePresenter<IListView<T>> {
     private SimpleSubListener<List<T>> mSimpleSubListener;
 
 
-    protected SimpleSubListener<List<T>> getSimpleListener(final int pageNum, final int pageSize) {
+    protected SimpleSubListener<List<T>> getLoadSimpleListener(final int pageNum, final int pageSize) {
         if (mSimpleSubListener == null) {
             mSimpleSubListener = new SimpleSubListener<List<T>>() {
                 @Override
                 public void onNext(List<T> t) {
-//                    if (t == null) {
-//                        return;
-//                    }
                     if (pageNum == 0 && t.size() == 0) {
                         getView().showEmpty();
                         return;
                     }
                     getView().addData(t);
                     if (getView().canLoadMore()) {
-                        if (t.size() <= pageSize) {
+                        if (t.size() < pageSize) {
                             if (pageNum == 0) {
                                 // 不显示没有更多
                                 getView().loadEnd(true);
@@ -42,7 +39,6 @@ public abstract class ListPresenter<T> extends BasePresenter<IListView<T>> {
 //                            pageNum++;
                         }
                     }
-//                    mIsLoad = false;
                 }
 
                 @Override
@@ -52,7 +48,6 @@ public abstract class ListPresenter<T> extends BasePresenter<IListView<T>> {
                     } else {
                         getView().loadError();
                     }
-//                    mIsLoad = false;
                 }
             };
         }
