@@ -36,7 +36,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getData();
+//        getData();
     }
 
     @Override
@@ -125,7 +125,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     protected abstract RecyclerView.LayoutManager getLayoutManager();
 
     protected void getData() {
-
+        getPresenter().getData();
     }
 
 

@@ -11,6 +11,7 @@ public class BasePresenter<V extends IBaseView> implements IPresenter<V> {
 
     private V mvpView;
 
+
     @Override
     public void attachView(V view) {
         mvpView = view;
@@ -31,7 +32,7 @@ public class BasePresenter<V extends IBaseView> implements IPresenter<V> {
         }
     }
 
-    public V getView() {
+    protected V getView() {
         checkViewAttach();
         return mvpView;
     }

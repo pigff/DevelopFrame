@@ -1,6 +1,5 @@
 package com.androiddev.zf.devframe.base.presenter.imp;
 
-import com.androiddev.zf.devframe.base.presenter.INetPresenter;
 import com.androiddev.zf.devframe.base.view.IListView;
 import com.androiddev.zf.devframe.subscribers.SimpleSubListener;
 
@@ -10,20 +9,19 @@ import java.util.List;
  * Created by greedy on 2017/5/11.
  */
 
-public class ListPresenter<T> extends BasePresenter<IListView<T>> implements INetPresenter {
+public abstract class ListPresenter<T> extends BasePresenter<IListView<T>> {
 
     private SimpleSubListener<List<T>> mSimpleSubListener;
 
-    @Override
-    public void getData() {
-//        getView()
-    }
 
-    private SimpleSubListener<List<T>> getSimpleListener(final int pageNum, final int pageSize) {
+    protected SimpleSubListener<List<T>> getSimpleListener(final int pageNum, final int pageSize) {
         if (mSimpleSubListener == null) {
             mSimpleSubListener = new SimpleSubListener<List<T>>() {
                 @Override
                 public void onNext(List<T> t) {
+//                    if (t == null) {
+//                        return;
+//                    }
                     if (pageNum == 0 && t.size() == 0) {
                         getView().showEmpty();
                         return;
@@ -49,7 +47,7 @@ public class ListPresenter<T> extends BasePresenter<IListView<T>> implements INe
 
                 @Override
                 public void onError(Throwable throwable) {
-                    if (pageNum == 0 ) {
+                    if (pageNum == 0) {
                         getView().showError();
                     } else {
                         getView().loadError();

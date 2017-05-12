@@ -37,6 +37,9 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
             EventBus.getDefault().register(this);
         }
         init();
+        if (getPresenter() != null) {
+            getPresenter().attachView(this);
+        }
     }
 
     @Override
@@ -65,6 +68,7 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
             mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_NO_DATA);
         }
     }
+
     @Override
     public void showError() {
         if (mEmptyLayout != null) {
@@ -101,13 +105,9 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
 
     }
 
-    protected void initData() {
+    protected abstract void initData();
 
-    }
-
-    protected void initView() {
-
-    }
+    protected abstract void initView();
 
     private void init() {
         initData();

@@ -43,6 +43,9 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
             mEmptyLayout.setOnBaseLayoutClickListener(this);
         }
         mIsInitialized = true;
+        if (getPresenter() != null) {
+            getPresenter().attachView(this);
+        }
         return mView;
     }
 

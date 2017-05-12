@@ -3,7 +3,7 @@ package com.androiddev.zf.devframe.subscribers;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.fjrcloud.sciencepro.App;
+import com.androiddev.zf.devframe.App;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;

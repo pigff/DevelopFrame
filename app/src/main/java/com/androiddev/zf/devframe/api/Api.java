@@ -1,6 +1,7 @@
 package com.androiddev.zf.devframe.api;
 
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -10,5 +11,5 @@ import rx.Observable;
 public interface Api {
 
     @GET("341-3")
-    Observable<Object> FindJokeList();
+    Observable<Joke> findJokeList(@Query("showapi_appid") String appid, @Query("showapi_sign") String sign);
 }
