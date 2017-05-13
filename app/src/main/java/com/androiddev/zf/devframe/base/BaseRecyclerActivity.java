@@ -2,26 +2,40 @@ package com.androiddev.zf.devframe.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.LinearLayout;
 
 import com.androiddev.zf.devframe.R;
+import com.androiddev.zf.devframe.base.presenter.imp.ListPresenter;
+import com.androiddev.zf.devframe.base.view.IListView;
+import com.androiddev.zf.devframe.utils.LogUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
 
 /**
  * Created by greedy on 17/3/14.
  */
 
-public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implements BaseQuickAdapter.RequestLoadMoreListener {
+public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? extends BaseViewHolder>, P extends ListPresenter<T>>
+        extends BaseToolbarActivity<P> implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, IListView<T> {
 
-    protected BaseQuickAdapter<T, BaseViewHolder> mAdapter;
+    public static final int DEFAULT_PAGENUM = 0;
+    public static final int DEFAULT_PAGESIZE = 20;
+
+    public static final int NORMAL_STATUS = 1000;
+    public static final int LOAD_STATUS = 1001;
+    public static final int REFRESH_STATUS = 1002;
+
+    protected V mAdapter;
     protected RecyclerView mRecyclerView;
     protected int mPageNum;
     protected int mPageSize;
-    protected boolean mIsLoad;
-//    private SimpleSubListener<List<T>> mSimpleSubListener;
+    protected int mStatus;
+
+    private SwipeRefreshLayout mRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,14 +50,14 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
 
     @Override
     public void initData() {
-        mPageNum = 0;
-        mPageSize = 10;
-        mIsLoad = false;
+        mPageNum = DEFAULT_PAGENUM;
+        mPageSize = DEFAULT_PAGESIZE;
+        mStatus = NORMAL_STATUS;
     }
 
     @Override
     public void initAdapter() {
-        mAdapter = getAdapter();
+        mAdapter = initRecyclerAdapter();
         if (canLoadMore()) {
             mAdapter.setOnLoadMoreListener(this, mRecyclerView);
         }
@@ -52,32 +66,34 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
         }
     }
 
-    protected void setRvParams(int left, int top, int right, int bottom) {
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
-        if (left != 0) {
-            layoutParams.leftMargin = left;
-        }
-        if (top != 0) {
-            layoutParams.topMargin = top;
-        }
-        if (right != 0) {
-            layoutParams.rightMargin = right;
-        }
-        if (bottom != 0) {
-            layoutParams.bottomMargin = bottom;
-        }
-        mRecyclerView.setLayoutParams(layoutParams);
-    }
-
     @Override
     public void initView() {
         setTitle(getToolbarTitle());
-
+        super.initView();
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_common_activity);
-        if (mRecyclerView == null) {
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_common_activity);
+        if (mRecyclerView == null || mRefreshLayout == null) {
             throw new IllegalStateException(
-                    "The subclass of ToolbarActivity must contain a recyclerview.");
+                    "The subclass of ToolbarActivity must contain recyclerview and refreshLayout");
         }
+
+        initRecycler();
+        if (canRefresh()) {
+            initRefreshLayout();
+        } else {
+            mRefreshLayout.setEnabled(false);
+        }
+    }
+
+    private void initRefreshLayout() {
+        mRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        mRefreshLayout.setOnRefreshListener(this);
+    }
+
+    private void initRecycler() {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(getLayoutManager());
 //        mRecyclerView.setAdapter(mAdapter);
@@ -85,48 +101,66 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
     }
 
     @Override
+    public void loadData(List<T> data) {
+        LogUtil.d(TAG, "status: " + mStatus);
+        if (mPageNum == 0 && data.size() == 0) {
+            showEmpty();
+            if (mStatus == REFRESH_STATUS) {
+                finishRefresh();
+            }
+            mStatus = NORMAL_STATUS;
+            return;
+        }
+        if (mStatus == REFRESH_STATUS) {
+            finishRefresh();
+            mPageNum = DEFAULT_PAGENUM + 1;
+            getAdapter().setNewData(data);
+        } else if (mStatus == LOAD_STATUS) {
+            getAdapter().addData(data);
+            if (canLoadMore()) {
+                if (data.size() < mPageSize) {
+                    if (mPageNum == DEFAULT_PAGENUM) {
+                        // 不显示没有更多
+                        getAdapter().loadMoreEnd(true);
+                    } else {
+                        //显示没有更多
+                        getAdapter().loadMoreEnd();
+                    }
+                } else {
+                    getAdapter().loadMoreComplete();
+                    // 页码增加 需要在View层里面做处理
+//                            pageNum++;
+                }
+            }
+            mPageNum++;
+        }
+        mStatus = NORMAL_STATUS;
+    }
+
+    @Override
+    public void loadError() {
+        LogUtil.d(TAG, "status: " + mStatus);
+        if (mStatus == REFRESH_STATUS) {
+            finishRefresh();
+            if (mPageNum == DEFAULT_PAGENUM) {
+                showError();
+            }
+        }
+        if (mStatus == LOAD_STATUS) {
+            if (mPageNum == DEFAULT_PAGENUM) {
+                showError();
+            } else {
+                getAdapter().loadMoreFail();
+            }
+        }
+        mStatus = NORMAL_STATUS;
+    }
+
+    @Override
     public void initListener() {
 
     }
 
-//    protected SimpleSubListener<List<T>> getSimpleListener() {
-//        if (mSimpleSubListener == null) {
-//            mSimpleSubListener = new SimpleSubListener<List<T>>() {
-//                @Override
-//                public void onNext(List<T> t) {
-//                    if (mPageNum == 0 && t.size() == 0) {
-//                        showEmpty();
-//                        return;
-//                    }
-//                    mAdapter.addData(t);
-//                    if (canLoadMore()) {
-//                        if (t.size() <= mPageSize) {
-//                            if (mPageNum == 0) {
-//                                mAdapter.loadMoreEnd(true);
-//                            } else {
-//                                mAdapter.loadMoreEnd();
-//                            }
-//                        } else {
-//                            mAdapter.loadMoreComplete();
-//                            mPageNum++;
-//                        }
-//                    }
-//                    mIsLoad = false;
-//                }
-//
-//                @Override
-//                public void onError(Throwable throwable) {
-//                    if (mPageNum == 0 && hasBaseLayout()) {
-//                        showError();
-//                    } else {
-//                        mAdapter.loadMoreFail();
-//                    }
-//                    mIsLoad = false;
-//                }
-//            };
-//        }
-//        return mSimpleSubListener;
-//    }
 
     @Override
     protected boolean hasBaseLayout() {
@@ -135,11 +169,15 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
 
     protected abstract String getToolbarTitle();
 
-    protected abstract BaseQuickAdapter<T, BaseViewHolder> getAdapter();
+    protected abstract V initRecyclerAdapter();
 
     protected abstract void getData();
 
     protected boolean canLoadMore() {
+        return false;
+    }
+
+    protected boolean canRefresh() {
         return false;
     }
 
@@ -151,15 +189,41 @@ public abstract class BaseRecyclerActivity<T> extends BaseToolbarActivity implem
         return new LinearLayoutManager(this);
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        getNetData();
+    private V getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = initRecyclerAdapter();
+        }
+        return mAdapter;
     }
 
-    private void getNetData() {
-        if (!mIsLoad) {
-            mIsLoad = true;
-            getData();
+    protected void finishRefresh() {
+        if (canRefresh() && mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
         }
+    }
+
+
+    @Override
+    public void onLoadMoreRequested() {
+        if (mStatus == NORMAL_STATUS) {
+            mStatus = LOAD_STATUS;
+            loadMoreData();
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mStatus == NORMAL_STATUS) {
+            mStatus = REFRESH_STATUS;
+            refreshData();
+        }
+    }
+
+    protected void loadMoreData() {
+
+    }
+
+    protected void refreshData() {
+
     }
 }

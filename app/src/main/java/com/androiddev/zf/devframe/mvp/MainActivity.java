@@ -7,11 +7,11 @@ import android.widget.TextView;
 
 import com.androiddev.zf.devframe.R;
 import com.androiddev.zf.devframe.api.Joke;
-import com.androiddev.zf.devframe.base.MvpActivity;
+import com.androiddev.zf.devframe.base.BaseToolbarActivity;
 import com.androiddev.zf.devframe.mvp.presenter.IMainView;
 import com.androiddev.zf.devframe.mvp.presenter.imp.MainPresenter;
 
-public class MainActivity extends MvpActivity<MainPresenter> implements IMainView {
+public class MainActivity extends BaseToolbarActivity<MainPresenter> implements IMainView {
 
     private TextView mTvContent;
 
@@ -29,6 +29,8 @@ public class MainActivity extends MvpActivity<MainPresenter> implements IMainVie
 
     @Override
     protected void initView() {
+        super.initView();
+        setTitle("哈哈这是标题");
         mTvContent = (TextView) findViewById(R.id.tv_content);
         Button button = (Button) findViewById(R.id.btn_jump);
         button.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +39,11 @@ public class MainActivity extends MvpActivity<MainPresenter> implements IMainVie
                 openActivity(ListActivity.class);
             }
         });
+    }
+
+    @Override
+    protected boolean canGoBack() {
+        return true;
     }
 
     @Override

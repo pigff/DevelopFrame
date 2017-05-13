@@ -1,6 +1,5 @@
 package com.androiddev.zf.devframe.base;
 
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
@@ -12,13 +11,14 @@ import android.widget.TextView;
 
 import com.androiddev.zf.devframe.App;
 import com.androiddev.zf.devframe.R;
+import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
 
 
 /**
  * Created by greedy on 17/3/11.
  */
 
-public abstract class BaseToolbarActivity extends MvpActivity {
+public abstract class BaseToolbarActivity<P extends BasePresenter> extends MvpActivity<P> {
 
     protected AppBarLayout mAppBarLayout;
     protected Toolbar mToolbar;
@@ -28,9 +28,9 @@ public abstract class BaseToolbarActivity extends MvpActivity {
     protected ImageView mLeftIv;
     private LinearLayout mRightLayout;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbarTitle = (TextView) findViewById(R.id.title_toolbar);
         mRightIv = (ImageView) findViewById(R.id.right_iv_toolbar);
@@ -42,21 +42,17 @@ public abstract class BaseToolbarActivity extends MvpActivity {
             throw new IllegalStateException(
                     "The subclass of ToolbarActivity must contain a toolbar.");
         }
-//        if (canGoBack()) {
-//            mToolbar.setNavigationIcon(R.mipmap.ic_direction_left);
-//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    finish();
-//                }
-//            });
-//        }
 
-
-
+        if (canGoBack()) {
+            mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
     }
-
-
 
     protected void setTitle(String title) {
         mToolbarTitle.setText(title);

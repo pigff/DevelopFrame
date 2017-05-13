@@ -18,10 +18,6 @@ public class ListPresenterImp extends ListPresenter<Joke.ShowapiResBodyBean.Cont
         RequestManager.getInstance()
                 .findJokeList2(pageNum, pageSize)
                 .compose(getView().<List<Joke.ShowapiResBodyBean.ContentlistBean>>bindToLife())
-                .subscribe(new SimpleSubscriber<>(getLoadSimpleListener(pageNum, pageSize)));
+                .subscribe(new SimpleSubscriber<>(getLoadSimpleListener()));
     }
-//    @Override
-//    public void getData() {
-//        RequestManager.getInstance().findJokeList2(new SimpleSubscriber<>(getSimpleListener(0, 10)));
-//    }
 }

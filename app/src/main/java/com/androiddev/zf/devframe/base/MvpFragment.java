@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
 
-    private static final String TAG = "MvpFragment";
+    protected static final String TAG = "MvpFragment";
     protected View mView;
     private EmptyLayout mEmptyLayout;
     private boolean mIsInitialized;

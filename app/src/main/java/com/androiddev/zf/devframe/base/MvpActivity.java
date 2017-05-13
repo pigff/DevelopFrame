@@ -19,7 +19,6 @@ import org.greenrobot.eventbus.EventBus;
 public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
 
 
-    private static final String TAG = "MvpActivity";
 
     private P mPresenter;
 

@@ -14,40 +14,17 @@ public abstract class ListPresenter<T> extends BasePresenter<IListView<T>> {
     private SimpleSubListener<List<T>> mSimpleSubListener;
 
 
-    protected SimpleSubListener<List<T>> getLoadSimpleListener(final int pageNum, final int pageSize) {
+    protected SimpleSubListener<List<T>> getLoadSimpleListener() {
         if (mSimpleSubListener == null) {
             mSimpleSubListener = new SimpleSubListener<List<T>>() {
                 @Override
                 public void onNext(List<T> t) {
-                    if (pageNum == 0 && t.size() == 0) {
-                        getView().showEmpty();
-                        return;
-                    }
-                    getView().addData(t);
-                    if (getView().canLoadMore()) {
-                        if (t.size() < pageSize) {
-                            if (pageNum == 0) {
-                                // 不显示没有更多
-                                getView().loadEnd(true);
-                            } else {
-                                //显示没有更多
-                                getView().loadEnd(false);
-                            }
-                        } else {
-                            getView().loadComplete();
-                            // 页码增加 需要在View层里面做处理
-//                            pageNum++;
-                        }
-                    }
+                    getView().loadData(t);
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
-                    if (pageNum == 0) {
-                        getView().showError();
-                    } else {
-                        getView().loadError();
-                    }
+                    getView().loadError();
                 }
             };
         }

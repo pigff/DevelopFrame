@@ -18,7 +18,7 @@ public class Constants {
     public static final String DATA = "data";
     //默认的加载页数 和 大小
     public static final int DEFAULT_PAGENUM = 0;
-    public static final int DEFAULT_PAGESIZE = 100;
+    public static final int DEFAULT_PAGESIZE = 20;
 
     public static final int SUCCESS_CODE = 0;
 }

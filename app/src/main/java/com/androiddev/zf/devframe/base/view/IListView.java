@@ -8,13 +8,7 @@ import java.util.List;
 
 public interface IListView<T> extends IBaseView {
 
-    void addData(List<T> data);
-
-    void loadComplete();
+    void loadData(List<T> data);
 
     void loadError();
-
-    void loadEnd(boolean show);
-
-    boolean canLoadMore();
 }

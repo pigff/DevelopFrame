@@ -16,6 +16,8 @@ import java.io.Serializable;
 
 public class BaseActivity extends RxAppCompatActivity {
 
+    protected static final String TAG = "BaseActivity";
+
     protected void openActivity(Class<?> clazz) {
         Intent intent = new Intent(this, clazz);
         startActivity(intent);
