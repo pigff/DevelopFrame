@@ -4,7 +4,6 @@ import com.androiddev.zf.devframe.R;
 import com.androiddev.zf.devframe.api.Joke;
 import com.androiddev.zf.devframe.base.BaseRecyclerFragment;
 import com.androiddev.zf.devframe.mvp.presenter.imp.ListPresenterImp;
-import com.androiddev.zf.devframe.widget.Constants;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -14,11 +13,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 public class ListFragment extends BaseRecyclerFragment<Joke.ShowapiResBodyBean.ContentlistBean, ListFragment.ListAdapter, ListPresenterImp> {
 
-    @Override
-    protected void onLazyLoad() {
-        super.onLazyLoad();
-        getPresenter().getData(mPageNum, mPageSize);
-    }
 
     @Override
     public boolean canLoadMore() {
@@ -41,13 +35,8 @@ public class ListFragment extends BaseRecyclerFragment<Joke.ShowapiResBodyBean.C
     }
 
     @Override
-    protected void loadMoreData() {
-        getPresenter().getData(mPageNum, mPageSize);
-    }
-
-    @Override
-    protected void refreshData() {
-        getPresenter().getData(Constants.DEFAULT_PAGENUM, mPageSize);
+    protected void loadData(int pageNum) {
+        getPresenter().getData(pageNum, mPageSize);
     }
 
     class ListAdapter extends BaseQuickAdapter<Joke.ShowapiResBodyBean.ContentlistBean, BaseViewHolder> {

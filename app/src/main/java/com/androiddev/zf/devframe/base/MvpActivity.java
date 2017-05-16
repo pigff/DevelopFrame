@@ -18,8 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
 
-
-
     private P mPresenter;
 
     protected EmptyLayout mEmptyLayout;

@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? extends BaseViewHolder>, P extends ListPresenter<T>>
-        extends BaseToolbarActivity<P> implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, IListView<T> {
+        extends BaseToolbarActivity<P> implements IListView<T> {
 
     public static final int DEFAULT_PAGENUM = 0;
     public static final int DEFAULT_PAGESIZE = 20;
@@ -33,7 +33,7 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
     protected RecyclerView mRecyclerView;
     protected int mPageNum;
     protected int mPageSize;
-    protected int mStatus;
+    private int mStatus;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -59,7 +59,15 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
     public void initAdapter() {
         mAdapter = initRecyclerAdapter();
         if (canLoadMore()) {
-            mAdapter.setOnLoadMoreListener(this, mRecyclerView);
+            mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+                @Override
+                public void onLoadMoreRequested() {
+                    if (mStatus == NORMAL_STATUS) {
+                        mStatus = LOAD_STATUS;
+                        loadData(mPageNum);
+                    }
+                }
+            }, mRecyclerView);
         }
         if (canLoadMore() && openLoadAnim()) {
             mAdapter.openLoadAnimation();
@@ -90,7 +98,15 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mStatus == NORMAL_STATUS) {
+                    mStatus = REFRESH_STATUS;
+                    loadData(DEFAULT_PAGENUM);
+                }
+            }
+        });
     }
 
     private void initRecycler() {
@@ -171,7 +187,10 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
 
     protected abstract V initRecyclerAdapter();
 
-    protected abstract void getData();
+    private void getData() {
+        mStatus = LOAD_STATUS;
+        loadData(mPageNum);
+    }
 
     protected boolean canLoadMore() {
         return false;
@@ -203,27 +222,15 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
     }
 
 
-    @Override
-    public void onLoadMoreRequested() {
-        if (mStatus == NORMAL_STATUS) {
-            mStatus = LOAD_STATUS;
-            loadMoreData();
-        }
-    }
+//    protected void loadMoreData() {
+//
+//    }
+//
+//    protected void refreshData() {
+//
+//    }
 
-    @Override
-    public void onRefresh() {
-        if (mStatus == NORMAL_STATUS) {
-            mStatus = REFRESH_STATUS;
-            refreshData();
-        }
-    }
-
-    protected void loadMoreData() {
-
-    }
-
-    protected void refreshData() {
+    protected void loadData(int pageNum) {
 
     }
 }

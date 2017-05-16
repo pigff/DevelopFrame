@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? extends BaseViewHolder>, P extends ListPresenter<T>>
-        extends MvpFragment<P> implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, IListView<T> {
+        extends MvpFragment<P> implements IListView<T> {
 
 
     public static final int DEFAULT_PAGENUM = 0;
@@ -38,7 +38,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     protected int mPageNum;
     protected int mPageSize;
 
-    protected int mStatus;
+    private int mStatus;
 
     private SwipeRefreshLayout mRefreshLayout;
 
@@ -80,7 +80,16 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mStatus == NORMAL_STATUS) {
+                    mStatus = REFRESH_STATUS;
+//                    refreshData();
+                    loadData(DEFAULT_PAGENUM);
+                }
+            }
+        });
     }
 
     private void initRecyclerView() {
@@ -94,7 +103,16 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     public void initAdapter() {
         mAdapter = initRecyclerAdapter();
         if (canLoadMore()) {
-            mAdapter.setOnLoadMoreListener(this, mRecyclerView);
+            mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+                @Override
+                public void onLoadMoreRequested() {
+                    if (mStatus == NORMAL_STATUS) {
+                        mStatus = LOAD_STATUS;
+//                        loadMoreData();
+                        loadData(mPageNum);
+                    }
+                }
+            }, mRecyclerView);
         }
         if (canLoadMore() && openLoadAnim()) {
             mAdapter.openLoadAnimation();
@@ -109,8 +127,9 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     }
 
     @Override
-    protected void onLazyLoad() {
+    protected final void onLazyLoad() {
         mStatus = LOAD_STATUS;
+        loadData(mPageNum);
     }
 
     @Override
@@ -133,7 +152,7 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
             finishRefresh();
             mPageNum = DEFAULT_PAGENUM + 1;
             getAdapter().setNewData(data);
-        } else if (mStatus == LOAD_STATUS){
+        } else if (mStatus == LOAD_STATUS) {
             getAdapter().addData(data);
             if (canLoadMore()) {
                 if (data.size() < mPageSize) {
@@ -175,7 +194,6 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     }
 
     /**
-     *
      * @return
      */
     protected boolean canLoadMore() {
@@ -183,7 +201,6 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
     }
 
     /**
-     *
      * @return
      */
     protected boolean canRefresh() {
@@ -213,28 +230,16 @@ public abstract class BaseRecyclerFragment<T, V extends BaseQuickAdapter<T, ? ex
         return new LinearLayoutManager(getActivity());
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        if (mStatus == NORMAL_STATUS) {
-            mStatus = LOAD_STATUS;
-            loadMoreData();
-        }
-    }
 
-    @Override
-    public void onRefresh() {
-        if (mStatus == NORMAL_STATUS) {
-            mStatus = REFRESH_STATUS;
-            refreshData();
-        }
-    }
+//    protected void loadMoreData(){
+//
+//    }
+//
+//    protected void refreshData() {
+//
+//    }
 
-    protected void loadMoreData(){
-
-    }
-
-    protected void refreshData() {
-
+    protected void loadData(int pageNum) {
     }
 
 }
