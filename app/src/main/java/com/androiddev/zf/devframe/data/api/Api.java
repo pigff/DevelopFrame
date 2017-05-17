@@ -1,4 +1,4 @@
-package com.androiddev.zf.devframe.api;
+package com.androiddev.zf.devframe.data.api;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

@@ -3,8 +3,8 @@ package com.androiddev.zf.devframe.network;
 import android.util.Log;
 
 import com.androiddev.zf.devframe.App;
-import com.androiddev.zf.devframe.api.Api;
-import com.androiddev.zf.devframe.api.Joke;
+import com.androiddev.zf.devframe.data.api.Api;
+import com.androiddev.zf.devframe.data.api.Joke;
 import com.androiddev.zf.devframe.widget.Constants;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;

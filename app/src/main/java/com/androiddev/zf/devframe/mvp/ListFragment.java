@@ -1,7 +1,7 @@
 package com.androiddev.zf.devframe.mvp;
 
 import com.androiddev.zf.devframe.R;
-import com.androiddev.zf.devframe.api.Joke;
+import com.androiddev.zf.devframe.data.api.Joke;
 import com.androiddev.zf.devframe.base.BaseRecyclerFragment;
 import com.androiddev.zf.devframe.mvp.presenter.imp.ListPresenterImp;
 import com.chad.library.adapter.base.BaseQuickAdapter;

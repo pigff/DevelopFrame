@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.androiddev.zf.devframe.R;
-import com.androiddev.zf.devframe.api.Joke;
+import com.androiddev.zf.devframe.data.api.Joke;
 import com.androiddev.zf.devframe.base.BaseToolbarActivity;
 import com.androiddev.zf.devframe.mvp.presenter.IMainView;
 import com.androiddev.zf.devframe.mvp.presenter.imp.MainPresenter;

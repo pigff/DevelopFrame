@@ -1,6 +1,6 @@
 package com.androiddev.zf.devframe.mvp.presenter.imp;
 
-import com.androiddev.zf.devframe.api.Joke;
+import com.androiddev.zf.devframe.data.api.Joke;
 import com.androiddev.zf.devframe.base.presenter.imp.BasePresenter;
 import com.androiddev.zf.devframe.mvp.presenter.IMainPresenter;
 import com.androiddev.zf.devframe.mvp.presenter.IMainView;

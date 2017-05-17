@@ -20,5 +20,5 @@ public class Constants {
     public static final int DEFAULT_PAGENUM = 0;
     public static final int DEFAULT_PAGESIZE = 20;
 
-    public static final int SUCCESS_CODE = 0;
+    public static final String SUCCESS_CODE = "0";
 }
