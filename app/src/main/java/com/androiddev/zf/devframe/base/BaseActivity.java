@@ -29,14 +29,14 @@ public class BaseActivity extends RxAppCompatActivity {
     protected static final String TAG = "BaseActivity";
 
     protected void openActivity(Class<?> clazz) {
-        Intent intent = new Intent(this, clazz);
-        startActivity(intent);
+        openActivity(clazz, new Bundle());
     }
 
     protected void openActivity(Class<?> clazz, Bundle bundle) {
         Intent intent = new Intent(this, clazz);
         intent.putExtra(Constants.PARAM, bundle);
-        startActivity(intent);
+//        startActivity(intent);
+        startWithAnimActivty(intent);
     }
 
     protected void openActivity(Class<?> clazz, Object o) {
@@ -52,7 +52,8 @@ public class BaseActivity extends RxAppCompatActivity {
             bundle.putParcelable(Constants.DATA, (Parcelable) o);
         }
         intent.putExtra(Constants.PARAM, bundle);
-        startActivity(intent);
+//        startActivity(intent);
+        startWithAnimActivty(intent);
     }
 
     protected void openActivityForResult(Class<?> clazz) {
@@ -72,7 +73,8 @@ public class BaseActivity extends RxAppCompatActivity {
     protected void openActivityForResult(Class<?> clazz, Bundle bundle, int requestCode) {
         Intent intent = new Intent(this, clazz);
         intent.putExtra(Constants.PARAM, bundle);
-        startActivityForResult(intent, requestCode);
+//        startActivityForResult(intent, requestCode);
+        startWithAnimActivtyForResult(intent, requestCode);
     }
 
     protected Bundle getBundleData() {
@@ -86,6 +88,59 @@ public class BaseActivity extends RxAppCompatActivity {
 
     protected void showLongToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    protected int[] getInAnimas() {
+        return new int[]{R.anim.common_whole_right_in, R.anim.common_part_left_out};
+    }
+
+    protected int[] getOutAnimas() {
+        return new int[]{R.anim.common_part_left_in, R.anim.common_whole_right_out};
+    }
+
+    private void loadTransitionAnim(boolean inTransition) {
+        int animas[];
+        if (inTransition) {
+            animas = getInAnimas();
+        } else {
+            animas = getOutAnimas();
+        }
+
+        if (animas == null || animas.length < 2) {
+            try {
+                throw new Exception("必须传入两个以上的动画资源");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            overridePendingTransition(animas[0], animas[1]);
+        }
+    }
+
+    protected boolean openTransitionAnim() {
+        return false;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        if (openTransitionAnim()) {
+            loadTransitionAnim(false);
+        }
+    }
+
+    private void startWithAnimActivty(Intent intent) {
+        startActivity(intent);
+        if (openTransitionAnim()) {
+            loadTransitionAnim(true);
+        }
+    }
+
+    private void startWithAnimActivtyForResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
+        if (openTransitionAnim()) {
+            loadTransitionAnim(true);
+        }
     }
 
     /**

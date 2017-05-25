@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 
 
 /**
- * Created by lin on 2017/2/23.
+ * Created by lin on 2017/5/11.
  */
 
 public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
@@ -167,13 +167,9 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
 
     }
 
-    protected void initView() {
+    protected abstract void initView();
 
-    }
-
-    protected void initData() {
-
-    }
+    protected abstract void initData();
 
     protected View findViewById(int id) {
         if (id < 0) {

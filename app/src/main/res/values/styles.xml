@@ -10,4 +10,7 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="progressBarHorizontalStyle" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
+    </style>
+
 </resources>

@@ -13,7 +13,7 @@ import com.trello.rxlifecycle.LifecycleTransformer;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * Created by lin on 2017/2/23.
+ * Created by lin on 2017/5/11.
  */
 
 public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity implements IBaseView, EmptyLayout.OnBaseLayoutClickListener {
