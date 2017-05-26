@@ -22,9 +22,11 @@
         android:src="@drawable/http_empty"
         android:gravity="center"/>
 
-    <ProgressBar
+    <com.androiddev.zf.devframe.widget.MaterialDesignProgressBar
         android:id="@+id/empty_loading"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        app:progress_stroke_color="@color/colorPrimaryDark"
+        app:progress_stroke_width="3dp"
         android:layout_gravity="center"/>
 </FrameLayout>

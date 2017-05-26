@@ -127,6 +127,9 @@ public abstract class BaseRecyclerActivity<T, V extends BaseQuickAdapter<T, ? ex
             mStatus = NORMAL_STATUS;
             return;
         }
+        if (mPageNum == DEFAULT_PAGENUM) {
+            hide();
+        }
         if (mStatus == REFRESH_STATUS) {
             finishRefresh();
             mPageNum = DEFAULT_PAGENUM + 1;

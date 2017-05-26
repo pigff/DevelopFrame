@@ -2,6 +2,7 @@ package com.androiddev.zf.devframe.base;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.androiddev.zf.devframe.utils.BarUtils;
 import com.androiddev.zf.devframe.utils.SystemBarUtil;
 import com.androiddev.zf.devframe.utils.ViewLayoutUtil;
 import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.widget.ProgressDialog;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.io.Serializable;
@@ -27,6 +29,8 @@ import java.io.Serializable;
 public class BaseActivity extends RxAppCompatActivity {
 
     protected static final String TAG = "BaseActivity";
+
+    private Dialog mProgressDialog;
 
     protected void openActivity(Class<?> clazz) {
         openActivity(clazz, new Bundle());
@@ -141,6 +145,28 @@ public class BaseActivity extends RxAppCompatActivity {
         if (openTransitionAnim()) {
             loadTransitionAnim(true);
         }
+    }
+
+    private void showProgress() {
+        if (mProgressDialog.isShowing()) {
+            return;
+        }
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog.Builder(this)
+                    .setMessage(getProgressMsg())
+                    .create();
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    protected String getProgressMsg() {
+        return "";
     }
 
     /**
@@ -283,5 +309,8 @@ public class BaseActivity extends RxAppCompatActivity {
         super.onDestroy();
         //修复软键盘内存泄露
         ViewLayoutUtil.fixInputMethodManagerLeak(this);
+        hideProgress();
     }
+
+
 }

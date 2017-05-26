@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="color_dialog_black_bg">#4b0f1421</color>
+
 
     <color name="bg_main">#f5f0eb</color>
     <color name="themes_main">#d03b3b</color>

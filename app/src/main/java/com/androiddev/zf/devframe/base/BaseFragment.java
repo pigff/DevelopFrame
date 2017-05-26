@@ -1,11 +1,13 @@
 package com.androiddev.zf.devframe.base;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.Toast;
 
 import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.widget.ProgressDialog;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.io.Serializable;
@@ -16,9 +18,10 @@ import java.io.Serializable;
 
 public class BaseFragment extends RxFragment {
 
+    private Dialog mProgressDialog;
+
     protected void openActivity(Class<?> clazz) {
-        Intent intent = new Intent(getActivity(), clazz);
-        startActivity(intent);
+       openActivity(clazz, new Bundle());
     }
 
     protected void openActivity(Class<?> clazz, Bundle bundle) {
@@ -49,5 +52,33 @@ public class BaseFragment extends RxFragment {
 
     protected void showLongToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    private void showProgress() {
+        if (mProgressDialog.isShowing()) {
+            return;
+        }
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog.Builder(getActivity())
+                    .setMessage(getProgressMsg())
+                    .create();
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    protected String getProgressMsg() {
+        return "";
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgress();
     }
 }

@@ -41,6 +41,7 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
 
         if (hasBaseLayout()) {
             mEmptyLayout = (EmptyLayout) findViewById(R.id.emptylayout);
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_LOADING);
             mEmptyLayout.setOnBaseLayoutClickListener(this);
         }
         mIsInitialized = true;
@@ -140,7 +141,7 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
 
     @Override
     public void hide() {
-        if (mEmptyLayout != null) {
+        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_LOADING) {
             mEmptyLayout.hide();
         }
     }

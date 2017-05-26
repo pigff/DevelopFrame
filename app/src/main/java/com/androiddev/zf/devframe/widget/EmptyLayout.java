@@ -36,7 +36,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     private int mBgColor;
 
     private FrameLayout mEmptyLayout;
-    private ProgressBar mProgressBar;
+    private MaterialDesignProgressBar mProgressBar;
     private ImageView mNetErrorIv;
     private ImageView mNoDataIv;
 
@@ -64,7 +64,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         mNetErrorIv = (ImageView) findViewById(R.id.iv_net_error);
         mNoDataIv = (ImageView) findViewById(R.id.iv_no_data);
         mEmptyLayout = (FrameLayout) findViewById(R.id.empty_layout);
-        mProgressBar = (ProgressBar) findViewById(R.id.empty_loading);
+        mProgressBar = (MaterialDesignProgressBar) findViewById(R.id.empty_loading);
 
         mNoDataIv.setTag(TAG_EMPTY);
         mNetErrorIv.setTag(TAG_ERROR);

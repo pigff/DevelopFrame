@@ -29,6 +29,7 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
         setContentView(provideContentView());
         if (hasBaseLayout()) {
             mEmptyLayout = (EmptyLayout) findViewById(R.id.emptylayout);
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_LOADING);
             mEmptyLayout.setOnBaseLayoutClickListener(this);
         }
         if (registEventBus()) {
@@ -90,7 +91,7 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
 
     @Override
     public void hide() {
-        if (mEmptyLayout != null) {
+        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_LOADING) {
             mEmptyLayout.hide();
         }
     }
