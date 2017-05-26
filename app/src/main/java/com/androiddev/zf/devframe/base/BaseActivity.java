@@ -148,7 +148,7 @@ public class BaseActivity extends RxAppCompatActivity {
     }
 
     private void showProgress() {
-        if (mProgressDialog.isShowing()) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return;
         }
         if (mProgressDialog == null) {

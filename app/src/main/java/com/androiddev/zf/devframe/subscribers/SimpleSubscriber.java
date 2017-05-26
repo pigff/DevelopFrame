@@ -27,7 +27,9 @@ public class SimpleSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onCompleted() {
-
+        if (mSimpleSubListener != null) {
+            mSimpleSubListener.onComplete();
+        }
     }
 
     @Override

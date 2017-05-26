@@ -21,7 +21,7 @@ public class BaseFragment extends RxFragment {
     private Dialog mProgressDialog;
 
     protected void openActivity(Class<?> clazz) {
-       openActivity(clazz, new Bundle());
+        openActivity(clazz, new Bundle());
     }
 
     protected void openActivity(Class<?> clazz, Bundle bundle) {
@@ -55,7 +55,7 @@ public class BaseFragment extends RxFragment {
     }
 
     private void showProgress() {
-        if (mProgressDialog.isShowing()) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return;
         }
         if (mProgressDialog == null) {
