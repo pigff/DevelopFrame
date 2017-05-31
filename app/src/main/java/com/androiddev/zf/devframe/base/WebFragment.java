@@ -23,7 +23,6 @@ import com.androiddev.zf.devframe.utils.constant.Constants;
 
 import java.io.Serializable;
 
-//TODO
 public class WebFragment extends MvpFragment {
 
     protected ProgressBar progressBar;
