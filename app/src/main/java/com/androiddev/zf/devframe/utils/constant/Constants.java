@@ -1,4 +1,4 @@
-package com.androiddev.zf.devframe.widget;
+package com.androiddev.zf.devframe.utils.constant;
 
 /**
  * Created by lin on 2017/2/18.

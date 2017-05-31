@@ -16,7 +16,7 @@ import com.androiddev.zf.devframe.R;
 import com.androiddev.zf.devframe.utils.BarUtils;
 import com.androiddev.zf.devframe.utils.SystemBarUtil;
 import com.androiddev.zf.devframe.utils.ViewLayoutUtil;
-import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.utils.constant.Constants;
 import com.androiddev.zf.devframe.widget.ProgressDialog;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 

@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.androiddev.zf.devframe.data.base.HttpListResut;
 import com.androiddev.zf.devframe.exception.ApiException;
-import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.utils.constant.Constants;
 
 import rx.functions.Func1;
 

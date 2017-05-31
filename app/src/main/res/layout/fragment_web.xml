@@ -13,7 +13,8 @@
         android:id="@+id/progressBar"
         style="@style/progressBarHorizontalStyle"
         android:layout_width="match_parent"
-        android:layout_height="6dp"/>
+        android:layout_height="6dp"
+        android:layout_above="@+id/webView"/>
 
     <include layout="@layout/common_empty_layout"/>
 </RelativeLayout>

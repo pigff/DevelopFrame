@@ -5,7 +5,7 @@ import android.util.Log;
 import com.androiddev.zf.devframe.App;
 import com.androiddev.zf.devframe.data.api.Api;
 import com.androiddev.zf.devframe.data.api.Joke;
-import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.utils.constant.Constants;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;

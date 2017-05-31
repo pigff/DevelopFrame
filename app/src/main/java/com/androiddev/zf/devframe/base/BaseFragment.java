@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.Toast;
 
-import com.androiddev.zf.devframe.widget.Constants;
+import com.androiddev.zf.devframe.utils.constant.Constants;
 import com.androiddev.zf.devframe.widget.ProgressDialog;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
