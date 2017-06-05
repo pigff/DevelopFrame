@@ -8,6 +8,9 @@ import com.androiddev.zf.devframe.utils.ValidateUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * Created by greedy on 17/3/31.
  */
@@ -26,6 +29,16 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
+
+        Realm.init(this);
+        //默认Realm配置
+        RealmConfiguration configuration = new RealmConfiguration.Builder().build();
+        // 自定义Realm配置
+//        RealmConfiguration configuration = new RealmConfiguration.Builder()
+//                .name("myRealm.realm")
+//                .deleteRealmIfMigrationNeeded()
+//                .build();
+        Realm.setDefaultConfiguration(configuration);
     }
 
     public static Application getInstance() {

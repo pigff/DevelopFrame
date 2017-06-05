@@ -91,7 +91,7 @@ public abstract class MvpActivity<P extends BasePresenter> extends BaseActivity 
 
     @Override
     public void hide() {
-        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_LOADING) {
+        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_HIDE) {
             mEmptyLayout.hide();
         }
     }

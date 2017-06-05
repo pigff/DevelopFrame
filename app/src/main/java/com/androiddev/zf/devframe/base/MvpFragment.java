@@ -141,7 +141,7 @@ public abstract class MvpFragment<P extends BasePresenter> extends BaseFragment 
 
     @Override
     public void hide() {
-        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_LOADING) {
+        if (mEmptyLayout != null && mEmptyLayout.getEmptyStatus() != EmptyLayout.STATUS_HIDE) {
             mEmptyLayout.hide();
         }
     }
