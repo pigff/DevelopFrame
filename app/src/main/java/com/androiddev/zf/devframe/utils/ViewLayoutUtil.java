@@ -70,7 +70,7 @@ public class ViewLayoutUtil {
             String param = arr[i];
             try {
                 f = imm.getClass().getDeclaredField(param);
-                if (f.isAccessible() == false) {
+                if (!f.isAccessible()) {
                     f.setAccessible(true);
                 } // author: sodino mail:sodino@qq.com
                 obj_get = f.get(imm);

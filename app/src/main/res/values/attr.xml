@@ -8,4 +8,9 @@
     <declare-styleable name="EmptyLayout">
         <attr name="background_color" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="BannerLayout">
+        <attr name="interval" format="integer"/>
+        <attr name="autoPlaying" format="boolean"/>
+    </declare-styleable>
 </resources>

@@ -1,6 +1,7 @@
 package com.androiddev.zf.devframe.mvp;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class MainActivity extends BaseToolbarActivity<MainPresenter> implements 
     protected void initView() {
         super.initView();
         setTitle("哈哈这是标题");
+        mToolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
         mTvContent = (TextView) findViewById(R.id.tv_content);
         Button button = (Button) findViewById(R.id.btn_jump);
         button.setOnClickListener(new View.OnClickListener() {

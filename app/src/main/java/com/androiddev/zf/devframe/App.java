@@ -3,9 +3,8 @@ package com.androiddev.zf.devframe;
 import android.app.Activity;
 import android.app.Application;
 
-import com.androiddev.zf.devframe.utils.ValidateUtil;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import io.realm.Realm;
@@ -68,7 +67,7 @@ public class App extends Application {
      * finish掉所有非栈顶的activity
      */
     public static void finishNoTopActivity() {
-        if (ValidateUtil.isValidate(ACTIVITIES)) {
+        if (isValidate(ACTIVITIES)) {
             while (ACTIVITIES.size() > 1) {
                 Activity activity = ACTIVITIES.get(0);
                 ACTIVITIES.remove(activity);
@@ -84,7 +83,7 @@ public class App extends Application {
      * finish掉所有的activity
      */
     public static void finishAllActivity() {
-        while (ValidateUtil.isValidate(ACTIVITIES)) {
+        while (isValidate(ACTIVITIES)) {
             Activity activity = ACTIVITIES.get(0);
             ACTIVITIES.remove(activity);
             if (activity != null && !activity.isFinishing()) {
@@ -94,7 +93,7 @@ public class App extends Application {
     }
 
     public static Activity getCurrentActivity() {
-        if (ValidateUtil.isValidate(ACTIVITIES)) {
+        if (isValidate(ACTIVITIES)) {
             return ACTIVITIES.get(ACTIVITIES.size() - 1);
         }
         return null;
@@ -102,5 +101,9 @@ public class App extends Application {
 
     public static int getStackActivitiesNum() {
         return ACTIVITIES.size();
+    }
+
+    public static boolean isValidate(Collection<?> collection) {
+        return null != collection && !collection.isEmpty();
     }
 }
